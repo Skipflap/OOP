@@ -1,0 +1,6 @@
+frontend
+.gradle
+app/build
+app/bin
+build
+bin
