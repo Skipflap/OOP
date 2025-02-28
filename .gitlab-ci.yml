@@ -4,7 +4,7 @@
 # If you feel for some reason this file MUST be changed, please post on the course forum so it can
 # be discussed between you and course staff.
 #
-image: cs2511docker/cs2511-gradle-8.8-ass1:3eb4c9d
+image: cs2511docker/cs2511-gradle-8.8-ass1:7a61c85
 
 stages:
   - lint

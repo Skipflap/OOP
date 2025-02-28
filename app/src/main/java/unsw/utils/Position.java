@@ -72,6 +72,8 @@ public class Position {
             return false;
         if (Math.abs(y - other.y) > 0.01)
             return false;
+        if (Double.isNaN(x) || Double.isNaN(y) || Double.isNaN(other.x) || Double.isNaN(other.y))
+            return false;
         return true;
     }
 }
