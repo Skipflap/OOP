@@ -15,6 +15,7 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static trains.TestHelpers.assertListAreEqualIgnoringOrder;
 
 public class TaskAExampleTests {
@@ -86,5 +87,35 @@ public class TaskAExampleTests {
                 controller.getTrainInfo("train3"));
 
         assertListAreEqualIgnoringOrder(List.of("train1", "train2", "train3"), controller.listTrainIds());
+    }
+
+    @Test
+    @Disabled // Remove the "@Disabled" annotation to enable the test.
+    public void testMultipleControllers() {
+        /**
+         * Note: If you are failing this test, you are likely using static variables in controller
+         * which means the variables are share across all instances of the controller (e.g., `controller`, `controller2)
+         */
+        TrainsController controller = new TrainsController();
+        TrainsController controller2 = new TrainsController();
+
+        controller.createStation("s1", "DepotStation", 1.0, 1.0);
+        controller.createStation("s2", "DepotStation", 1.0, 2.0);
+        controller.createTrack("t1-2", "s1", "s2");
+        assertDoesNotThrow(() -> {
+            controller.createTrain("train1", "PassengerTrain", "s2", List.of("s1", "s2"));
+        });
+
+        assertEquals(controller.listStationIds(), List.of("s1", "s2"));
+        assertEquals(controller.listTrackIds(), List.of("t1-2"));
+        assertEquals(controller.listTrainIds(), List.of("train1"));
+
+        // controller2 should not have these entities
+        assertNotEquals(controller.listStationIds(), controller2.listStationIds());
+        assertNotEquals(controller.listTrackIds(), controller2.listTrackIds());
+        assertNotEquals(controller.listTrainIds(), controller2.listTrainIds());
+        assertEquals(controller2.listStationIds(), List.of());
+        assertEquals(controller2.listTrackIds(), List.of());
+        assertEquals(controller2.listTrainIds(), List.of());
     }
 }
