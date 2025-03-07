@@ -9,7 +9,7 @@ import unsw.utils.TrackType;
  *
  * @note You can't store this class as an attribute in another, and should just instantiate it
  *       when needed. In other words, there should never exist a "has-a" relationship between
- *       this class and another. Doing so will make you lose marks for domain modelling.
+ *       this class and any other class. Doing so will make you lose marks for domain modelling.
  *
  *       You shouldn't modify or move this file.
  *
