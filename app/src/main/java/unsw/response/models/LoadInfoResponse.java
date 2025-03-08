@@ -9,7 +9,7 @@ import java.util.Objects;
  *       when needed. In other words, there should never exist a "has-a" relationship between
  *       this class and any other class. Doing so will make you lose marks for domain modelling.
  *
- *       You shouldn't modify or move this file.
+ *       You shouldn't modify or move this file. Refer to the assignment specification.
  *
  * @author Daniel Khuu
  */
