@@ -5,12 +5,11 @@ import java.util.Objects;
 /**
  * Represents a generic response for load information.
  *
- * @note You can't store this class in TrainsController and should just create
- *       it when needed, using this will make you lose marks for design
- *       modelling. (it's an okay start, but there is much more work to be
- *       done).
+ * @note You can't store this class as an attribute in another, and should just instantiate it
+ *       when needed. In other words, there should never exist a "has-a" relationship between
+ *       this class and any other class. Doing so will make you lose marks for domain modelling.
  *
- *       You shouldn't modify or move this file.
+ *       You shouldn't modify or move this file. Refer to the assignment specification.
  *
  * @author Daniel Khuu
  */
