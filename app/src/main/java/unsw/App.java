@@ -1,11 +1,5 @@
 package unsw;
 
-import spark.Request;
-import static spark.Spark.*;
-
-import unsw.exceptions.UNSWException;
-import unsw.trains.TrainsController;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +13,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-// import java.lang.reflect.Type;
 import scintilla.Scintilla;
+import spark.Request;
 import spark.Response;
+import static spark.Spark.before;
+import static spark.Spark.get;
+import static spark.Spark.options;
+import static spark.Spark.post;
+import unsw.exceptions.UNSWException;
+import unsw.trains.TrainsController;
 
 public class App {
     private static TrainsController tc = new TrainsController();
