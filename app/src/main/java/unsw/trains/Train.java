@@ -2,7 +2,7 @@ package unsw.trains;
 
 import unsw.utils.Position;
 
-public class Train {
+public abstract class Train {
     private String trainId;
     private Position position;
     private String currentLocationId; //Represents the station or track ID that the train is currently at
@@ -32,4 +32,6 @@ public class Train {
     public void setCurrentLocationId(String currentLocationId) {
         this.currentLocationId = currentLocationId;
     }
+
+    public abstract double getSpeed();
 }
