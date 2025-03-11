@@ -9,5 +9,6 @@
   "editor.tabSize": 4,
   "editor.detectIndentation": false,
   "editor.glyphMargin": true,
-  "workbench.editor.showIcons": true
+  "workbench.editor.showIcons": true,
+  "java.compile.nullAnalysis.mode": "automatic"
 }
