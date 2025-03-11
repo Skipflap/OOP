@@ -1,6 +1,7 @@
 package unsw.stations;
 
 import unsw.utils.Position;
+
 public class Station {
     private String stationId;
     private Position positionId;
@@ -14,15 +15,15 @@ public class Station {
         return stationId;
     }
 
-    public void setStationId(String stationId){
+    public void setStationId(String stationId) {
         this.stationId = stationId;
     }
 
-    public Position getPosition(){
+    public Position getPosition() {
         return positionId;
     }
 
-    public void setPosition(Position positionId){
+    public void setPosition(Position positionId) {
         this.positionId = positionId;
     }
 }
