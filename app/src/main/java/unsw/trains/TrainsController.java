@@ -10,11 +10,8 @@ import unsw.response.models.StationInfoResponse;
 import unsw.response.models.TrackInfoResponse;
 import unsw.response.models.TrainInfoResponse;
 import unsw.routes.RouteType;
-import unsw.stations.CentralStation;
-import unsw.stations.CargoStation;
-import unsw.stations.PassengerStation;
-import unsw.stations.DepotStation;
 import unsw.stations.Station;
+import unsw.stations.StationFactory;
 import unsw.utils.Position;
 import unsw.tracks.Track;
 import unsw.routes.Route;
@@ -41,28 +38,12 @@ public class TrainsController {
 
     public void createStation(String stationId, String type, double x, double y) {
         Position pos = new Position(x, y);
-        Station station;
-
-        switch (type) {
-        case "PassengerStation":
-            station = new PassengerStation(stationId, pos);
-            break;
-        case "CargoStation":
-            station = new CargoStation(stationId, pos);
-            break;
-        case "CentralStation":
-            station = new CentralStation(stationId, pos);
-            break;
-        case "DepotStation":
-            station = new DepotStation(stationId, pos);
-            break;
-        default:
-            throw new IllegalArgumentException("Invalid station type" + type);
-        }
+        Station station = StationFactory.createStation(stationId, type, pos);
 
         if (stations.containsKey(stationId)) {
             throw new IllegalArgumentException("Station ID already exists" + stationId);
         }
+
         stations.put(stationId, station);
     }
 
@@ -89,7 +70,6 @@ public class TrainsController {
         }
 
         // Determine the route type using the helper function in the Route class.
-        // We pass the tracks map from this controller.
         RouteType routeType = Route.determineRouteType(type, route, tracks);
         // Create the train's route using the determined type.
         unsw.routes.Route trainRoute = new unsw.routes.Route(route, routeType);
