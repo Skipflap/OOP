@@ -92,7 +92,7 @@ public class TrainsController {
     }
 
     public void simulate() {
-        // Todo: Task bi
+        Simulator.simulateOneTick(trains, stations, tracks);
     }
 
     /**

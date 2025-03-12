@@ -1,13 +1,19 @@
 package unsw.trains;
 
+import java.util.List;
+import java.util.Map;
+
 import unsw.utils.Position;
 import unsw.routes.Route;
+import unsw.stations.Station;
+import unsw.tracks.Track;
 
 public abstract class Train {
     private String trainId;
     private Position position;
-    private String currentLocationId; //Represents the station or track ID that the train is currently at
+    private String currentLocationId;
     private Route route;
+    private Boolean movingForward = true;
 
     public Train(String trainId, Position position, String currentLocationId, Route route) {
         this.trainId = trainId;
@@ -40,5 +46,26 @@ public abstract class Train {
         return route;
     }
 
+    public boolean isMovingForward() {
+        return movingForward;
+    }
+
+    public void setMovingForward(boolean movingForward) {
+        this.movingForward = movingForward;
+    }
+
     public abstract double getSpeed();
+
+    public abstract void moveOneTick(Map<String, Station> stations, Map<String, Track> tracks);
+
+    protected void updateDirectionIfNeeded(boolean forward) {
+        List<String> routeStations = getRoute().getStations();
+        String firstStation = routeStations.get(0);
+        String lastStation = routeStations.get(routeStations.size() - 1);
+        if (getCurrentLocationId().equals(firstStation) && !forward) {
+            setMovingForward(true);
+        } else if (getCurrentLocationId().equals(lastStation) && forward) {
+            setMovingForward(false);
+        }
+    }
 }
