@@ -24,4 +24,10 @@ public class StationFactory {
             throw new IllegalArgumentException("Station ID already exists: " + stationId);
         }
     }
+
+    public static void validateStationExists(String stationId, Map<String, Station> stations) {
+        if (!stations.containsKey(stationId)) {
+            throw new IllegalArgumentException("Station does not exist: " + stationId);
+        }
+    }
 }

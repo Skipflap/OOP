@@ -6,19 +6,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import unsw.exceptions.InvalidRouteException;
+import unsw.response.models.InfoResponseAssembler;
 import unsw.response.models.StationInfoResponse;
 import unsw.response.models.TrackInfoResponse;
 import unsw.response.models.TrainInfoResponse;
-import unsw.routes.RouteType;
 import unsw.stations.Station;
 import unsw.stations.StationFactory;
 import unsw.utils.Position;
 import unsw.tracks.Track;
 import unsw.tracks.TrackFactory;
-import unsw.routes.Route;
 
 /*
- * import unsw.trains.Train; import unsw.trains.BulletTrain; import
+ * import unsw.trains.Train; import unsw.trains.BulletTrain; importls
  * unsw.trains.PassengerTrain; import unsw.trains.CargoTrain; import
  * unsw.routes.Route; import unsw.stations.Station; import
  * unsw.stations.PassengerStation; import unsw.stations.CargoStation; import
@@ -52,41 +51,16 @@ public class TrainsController {
 
     public void createTrain(String trainId, String type, String stationId, List<String> route)
             throws InvalidRouteException {
-        if (!stations.containsKey(stationId)) {
-            throw new IllegalArgumentException("Station does not exist: " + stationId);
-        }
-        // Validate that the starting station is part of the route.
-        if (!route.contains(stationId)) {
-            throw new InvalidRouteException("Starting station is not in the route: " + stationId);
-        }
+        StationFactory.validateStationExists(stationId, stations);
 
-        // Determine the route type using the helper function in the Route class.
-        RouteType routeType = Route.determineRouteType(type, route, tracks);
-        // Create the train's route using the determined type.
-        unsw.routes.Route trainRoute = new unsw.routes.Route(route, routeType);
+        TrainFactory.validateTrainCreation(trainId, trains);
 
-        // Create train of the appropriate type.
-        Train train;
         Station startStation = stations.get(stationId);
-        switch (type) {
-        case "PassengerTrain":
-            train = new PassengerTrain(trainId, startStation.getPosition(), stationId, trainRoute);
-            break;
-        case "CargoTrain":
-            train = new CargoTrain(trainId, startStation.getPosition(), stationId, trainRoute);
-            break;
-        case "BulletTrain":
-            train = new BulletTrain(trainId, startStation.getPosition(), stationId, trainRoute);
-            break;
-        default:
-            throw new IllegalArgumentException("Invalid train type: " + type);
-        }
+
+        Train train = TrainFactory.createTrain(trainId, type, startStation, route, tracks);
 
         startStation.addTrain(train);
 
-        if (trains.containsKey(trainId)) {
-            throw new IllegalArgumentException("Train ID already exists: " + trainId);
-        }
         trains.put(trainId, train);
     }
 
@@ -104,35 +78,17 @@ public class TrainsController {
 
     public TrainInfoResponse getTrainInfo(String trainId) {
         Train train = trains.get(trainId);
-        if (train == null) {
-            throw new IllegalArgumentException("No such train: " + trainId);
-        }
-        return new TrainInfoResponse(train.getTrainId(), train.getCurrentLocationId(), train.getClass().getSimpleName(),
-                train.getPosition());
+        return InfoResponseAssembler.toTrainInfoResponse(train);
     }
 
     public StationInfoResponse getStationInfo(String stationId) {
         Station station = stations.get(stationId);
-        if (station == null) {
-            throw new IllegalArgumentException("No such station: " + stationId);
-        }
-        List<TrainInfoResponse> trainInfos = new ArrayList<>();
-        for (Train train : station.getTrains()) {
-            trainInfos.add(new TrainInfoResponse(train.getTrainId(), train.getCurrentLocationId(),
-                    train.getClass().getSimpleName(), train.getPosition()));
-        }
-        // Loads are not implemented, so pass an empty list for loads.
-        return new StationInfoResponse(station.getStationId(), station.getClass().getSimpleName(),
-                station.getPosition(), new ArrayList<>(), trainInfos);
+        return InfoResponseAssembler.toStationInfoResponse(station);
     }
 
     public TrackInfoResponse getTrackInfo(String trackId) {
         Track track = tracks.get(trackId);
-        if (track == null) {
-            throw new IllegalArgumentException("No such track: " + trackId);
-        }
-        return new TrackInfoResponse(track.getTrackId(), track.getFromStationId(), track.getToStationId(),
-                track.getType(), track.getDurability());
+        return InfoResponseAssembler.toTrackInfoResponse(track);
     }
 
     public void simulate() {
