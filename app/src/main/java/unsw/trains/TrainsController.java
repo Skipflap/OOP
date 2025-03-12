@@ -14,6 +14,7 @@ import unsw.stations.Station;
 import unsw.stations.StationFactory;
 import unsw.utils.Position;
 import unsw.tracks.Track;
+import unsw.tracks.TrackFactory;
 import unsw.routes.Route;
 
 /*
@@ -37,25 +38,15 @@ public class TrainsController {
     private Map<String, Train> trains = new HashMap<>();
 
     public void createStation(String stationId, String type, double x, double y) {
+        StationFactory.validateStationCreation(stationId, stations);
         Position pos = new Position(x, y);
         Station station = StationFactory.createStation(stationId, type, pos);
-
-        if (stations.containsKey(stationId)) {
-            throw new IllegalArgumentException("Station ID already exists" + stationId);
-        }
-
         stations.put(stationId, station);
     }
 
     public void createTrack(String trackId, String fromStationId, String toStationId) {
-        if (tracks.containsKey(trackId)) {
-            throw new IllegalArgumentException("Track ID already exists:" + trackId);
-        }
-        if (!stations.containsKey(fromStationId) || !stations.containsKey(toStationId)) {
-            throw new IllegalArgumentException(
-                    "One or both station IDs do not exist: " + fromStationId + ", " + toStationId);
-        }
-        Track track = new Track(trackId, fromStationId, toStationId);
+        TrackFactory.validateTrackCreation(trackId, fromStationId, toStationId, tracks, stations);
+        Track track = TrackFactory.createTrack(trackId, fromStationId, toStationId);
         tracks.put(trackId, track);
     }
 

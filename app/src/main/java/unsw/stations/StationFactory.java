@@ -1,5 +1,6 @@
 package unsw.stations;
 
+import java.util.Map;
 import unsw.utils.Position;
 
 public class StationFactory {
@@ -14,7 +15,13 @@ public class StationFactory {
         case "DepotStation":
             return new DepotStation(stationId, pos);
         default:
-            throw new IllegalArgumentException("Invalid station type" + type);
+            throw new IllegalArgumentException("Invalid station type: " + type);
+        }
+    }
+
+    public static void validateStationCreation(String stationId, Map<String, Station> stations) {
+        if (stations.containsKey(stationId)) {
+            throw new IllegalArgumentException("Station ID already exists: " + stationId);
         }
     }
 }
