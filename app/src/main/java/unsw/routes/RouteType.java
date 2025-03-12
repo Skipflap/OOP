@@ -1,5 +1,5 @@
 package unsw.routes;
 
-public class RouteType {
-    
+public enum RouteType {
+    LINEAR, CYCLICAL
 }

@@ -26,13 +26,11 @@ public class CargoStation extends Station {
         this.cargos = new ArrayList<>();
     }
 
-    /**
-     * Returns the maximum number of trains allowed at a CargoStation.
-     * @post returns MAX_TRAINS, which is 4.
-     */
+    @Override
     public int getMaxTrains() {
         return MAX_TRAINS;
     }
+
 
     /**
      * Adds a train to the CargoStation if capacity allows.

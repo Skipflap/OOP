@@ -26,6 +26,11 @@ public class PassengerStation extends Station {
         }
     }
 
+    @Override
+    public int getMaxTrains() {
+        return MAX_TRAINS;
+    }
+
     public void removeTrain(Train train) {
         trains.remove(train);
     }

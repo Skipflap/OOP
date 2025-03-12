@@ -1,16 +1,19 @@
 package unsw.trains;
 
 import unsw.utils.Position;
+import unsw.routes.Route;
 
 public abstract class Train {
     private String trainId;
     private Position position;
     private String currentLocationId; //Represents the station or track ID that the train is currently at
+    private Route route;
 
-    public Train(String trainId, Position position, String currentLocationId) {
+    public Train(String trainId, Position position, String currentLocationId, Route route) {
         this.trainId = trainId;
         this.position = position;
         this.currentLocationId = currentLocationId;
+        this.route = route;
     }
 
     public String getTrainId() {
@@ -31,6 +34,10 @@ public abstract class Train {
 
     public void setCurrentLocationId(String currentLocationId) {
         this.currentLocationId = currentLocationId;
+    }
+
+    public Route getRoute() {
+        return route;
     }
 
     public abstract double getSpeed();
