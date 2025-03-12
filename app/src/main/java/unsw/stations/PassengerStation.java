@@ -53,5 +53,15 @@ public class PassengerStation extends Station {
         passengers.clear();
     }
 
+    @Override
+    public boolean canHoldPassengers() {
+        return true;
+    }
+
+    @Override
+    public boolean canHoldCargo() {
+        return false;
+    }
+
     // Add later loading & unloading etc
 }

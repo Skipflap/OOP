@@ -1,5 +1,6 @@
 package unsw.trains;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import unsw.utils.Position;
 import unsw.routes.Route;
 import unsw.stations.Station;
 import unsw.tracks.Track;
+import unsw.loads.Load;
 
 public abstract class Train {
     private String trainId;
@@ -14,6 +16,8 @@ public abstract class Train {
     private String currentLocationId;
     private Route route;
     private Boolean movingForward = true;
+
+    private List<Load> loads = new ArrayList<>();
 
     public Train(String trainId, Position position, String currentLocationId, Route route) {
         this.trainId = trainId;
@@ -52,6 +56,14 @@ public abstract class Train {
 
     public void setMovingForward(boolean movingForward) {
         this.movingForward = movingForward;
+    }
+
+    public List<Load> getLoads() {
+        return loads;
+    }
+
+    public void addLoad(Load load) {
+        loads.add(load);
     }
 
     public abstract double getSpeed();

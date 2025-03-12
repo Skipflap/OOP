@@ -12,9 +12,12 @@ import unsw.response.models.TrackInfoResponse;
 import unsw.response.models.TrainInfoResponse;
 import unsw.stations.Station;
 import unsw.stations.StationFactory;
+import unsw.stations.StationValidator;
 import unsw.utils.Position;
 import unsw.tracks.Track;
 import unsw.tracks.TrackFactory;
+import unsw.loads.Passenger;
+import unsw.loads.Cargo;
 
 /*
  * import unsw.trains.Train; import unsw.trains.BulletTrain; importls
@@ -106,11 +109,27 @@ public class TrainsController {
     }
 
     public void createPassenger(String startStationId, String destStationId, String passengerId) {
-        // Todo: Task bii
+        Station station = stations.get(startStationId);
+        StationFactory.validateStationExists(startStationId, stations);
+        StationValidator.validateCanHoldPassengers(station, startStationId);
+
+        Passenger passenger = new Passenger(passengerId, destStationId, station.getPosition());
+        station.addLoad(passenger);
+
+        // Debug: print the current loads at the station
+        System.out.println("DEBUG: createPassenger: Station " + startStationId + " loads after addition: "
+                + station.getLoads().stream().map(l -> l.getLoad() + "(" + l.getType() + ")").toList());
     }
 
     public void createCargo(String startStationId, String destStationId, String cargoId, int weight) {
-        // Todo: Task bii
+        Station station = stations.get(startStationId);
+        StationFactory.validateStationExists(startStationId, stations);
+
+        StationValidator.validateCanHoldCargo(station, startStationId);
+
+        Cargo cargo = new Cargo(cargoId, destStationId, weight, station.getPosition());
+
+        station.addLoad(cargo);
     }
 
     public void createPerishableCargo(String startStationId, String destStationId, String cargoId, int weight,
