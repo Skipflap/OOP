@@ -28,16 +28,16 @@ public class TaskBExampleTests {
         });
 
         // Check that the trains were created.
-        assertEquals(controller.getTrainInfo("train1").getPosition(), new Position(0.0, 0.0));
-        assertEquals(controller.getTrainInfo("train2").getPosition(), new Position(0.0, 0.0));
-        assertEquals(controller.getTrainInfo("train3").getPosition(), new Position(0.0, 0.0));
+        assertEquals(new Position(0.0, 0.0), controller.getTrainInfo("train1").getPosition());
+        assertEquals(new Position(0.0, 0.0), controller.getTrainInfo("train2").getPosition());
+        assertEquals(new Position(0.0, 0.0), controller.getTrainInfo("train3").getPosition());
 
         controller.simulate();
 
         // Check that each train type has moved the correct amount.
-        assertEquals(controller.getTrainInfo("train1").getPosition(), new Position(1.41, 1.41));
-        assertEquals(controller.getTrainInfo("train2").getPosition(), new Position(2.12, 2.12));
-        assertEquals(controller.getTrainInfo("train3").getPosition(), new Position(3.53, 3.53));
+        assertEquals(new Position(1.41, 1.41), controller.getTrainInfo("train1").getPosition());
+        assertEquals(new Position(2.12, 2.12), controller.getTrainInfo("train2").getPosition());
+        assertEquals(new Position(3.53, 3.53), controller.getTrainInfo("train3").getPosition());
     }
 
     @Test
