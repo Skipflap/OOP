@@ -71,23 +71,33 @@ public class Route {
     }
 
     public static RouteType determineRouteType(String trainType, List<String> stationIds, Map<String, Track> tracks) {
-        // For Passenger and Cargo trains, the route must be linear.
-        if (!"BulletTrain".equals(trainType)) {
-            return RouteType.LINEAR;
+        if (stationIds == null || stationIds.isEmpty()) {
+            throw new IllegalArgumentException("Stations list must not be null or empty");
         }
-        // For BulletTrain, check if a cyclical route can be formed:
-        // A cyclical route must have at least 3 stations and there must be a track between the first and last station.
+        if (stationIds.size() < 2) {
+            throw new IllegalArgumentException("At least two stations are required");
+        }
+        boolean isCyclical = false;
         if (stationIds.size() >= 3) {
             String first = stationIds.get(0);
             String last = stationIds.get(stationIds.size() - 1);
-            // Check if a track exists between first and last (in either direction)
+            // Check if a track exists between the first and last stations (in either direction)
             for (Track track : tracks.values()) {
                 if ((track.getFromStationId().equals(first) && track.getToStationId().equals(last))
                         || (track.getFromStationId().equals(last) && track.getToStationId().equals(first))) {
-                    return RouteType.CYCLICAL;
+                    isCyclical = true;
+                    break;
                 }
             }
         }
-        return RouteType.LINEAR;
+        if (!"BulletTrain".equals(trainType)) {
+            // For non-BulletTrains, a cyclical route (i.e. when isCyclical is true) is invalid.
+            if (isCyclical) {
+                return RouteType.CYCLICAL;
+            }
+            return RouteType.LINEAR;
+        }
+        // For BulletTrain, use the cyclical flag
+        return isCyclical ? RouteType.CYCLICAL : RouteType.LINEAR;
     }
 }

@@ -16,6 +16,12 @@ public class TrainFactory {
             throw new InvalidRouteException("Starting station is not in the route: " + startStation.getStationId());
         }
         RouteType routeType = Route.determineRouteType(type, route, tracks);
+
+        // For non-BulletTrains, a cyclical route is invalid.
+        if (!"BulletTrain".equals(type) && routeType == RouteType.CYCLICAL) {
+            throw new InvalidRouteException("Cyclical route is not allowed for " + type);
+        }
+
         Route trainRoute = new Route(route, routeType);
 
         switch (type) {

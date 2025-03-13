@@ -10,12 +10,10 @@ import java.util.List;
 
 public class CargoStation extends Station {
     private static final int MAX_TRAINS = 4;
-    private List<Train> trains;
     private List<Cargo> cargos;
 
     public CargoStation(String stationId, Position position) {
         super(stationId, position);
-        this.trains = new ArrayList<>();
         this.cargos = new ArrayList<>();
     }
 
@@ -23,16 +21,16 @@ public class CargoStation extends Station {
     public int getMaxTrains() {
         return MAX_TRAINS;
     }
-
+    @Override
     public void addTrain(Train train) {
-        if (trains.size() >= MAX_TRAINS) {
+        if (super.getTrains().size() >= MAX_TRAINS) {
             throw new IllegalStateException("CargoStation is full. Maximum allowed trains: " + MAX_TRAINS);
         }
-        trains.add(train);
+        super.addTrain(train);
     }
 
     public void removeTrain(Train train) {
-        trains.remove(train);
+        super.removeTrain(train);
     }
 
     public void addCargo(Cargo cargo) {

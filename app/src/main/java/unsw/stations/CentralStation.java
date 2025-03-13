@@ -27,14 +27,14 @@ public class CentralStation extends Station {
     }
 
     public void addTrain(Train train) {
-        if (trains.size() >= MAX_TRAINS) {
+        if (super.getTrains().size() >= MAX_TRAINS) {
             throw new IllegalStateException("CentralStation is full. Maximum allowed trains: " + MAX_TRAINS);
         }
-        trains.add(train);
+        super.addTrain(train);
     }
 
     public void removeTrain(Train train) {
-        trains.remove(train);
+        super.removeTrain(train);
     }
 
     public void addPassenger(Passenger passenger) {

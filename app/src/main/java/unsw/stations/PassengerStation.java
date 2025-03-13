@@ -11,28 +11,25 @@ import java.util.List;
 
 public class PassengerStation extends Station {
     private static final int MAX_TRAINS = 2;
-    private List<Train> trains;
     private List<Passenger> passengers;
 
     public PassengerStation(String stationId, Position positionId) {
         super(stationId, positionId);
-        this.trains = new ArrayList<>();
         this.passengers = new ArrayList<>();
     }
 
+    @Override
     public void addTrain(Train train) {
-        if (trains.size() >= MAX_TRAINS) {
-            throw new IllegalStateException("Passenger Station is full. Max = 2");
-        }
+        super.addTrain(train);
     }
 
     @Override
     public int getMaxTrains() {
         return MAX_TRAINS;
     }
-
+    @Override
     public void removeTrain(Train train) {
-        trains.remove(train);
+        super.removeTrain(train);
     }
 
     public void addPassenger(Passenger passenger) {
