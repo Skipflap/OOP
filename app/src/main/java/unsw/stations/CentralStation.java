@@ -11,13 +11,11 @@ import java.util.List;
 
 public class CentralStation extends Station {
     private static final int MAX_TRAINS = 8;
-    private List<Train> trains;
     private List<Passenger> passengers;
     private List<Cargo> cargos;
 
     public CentralStation(String stationId, Position position) {
         super(stationId, position);
-        this.trains = new ArrayList<>();
         this.passengers = new ArrayList<>();
         this.cargos = new ArrayList<>();
     }

@@ -13,9 +13,9 @@ import unsw.response.models.TrainInfoResponse;
 import unsw.stations.Station;
 import unsw.stations.StationFactory;
 import unsw.stations.StationValidator;
-import unsw.utils.Position;
 import unsw.tracks.Track;
 import unsw.tracks.TrackFactory;
+import unsw.utils.Position;
 import unsw.loads.Passenger;
 import unsw.loads.Cargo;
 
