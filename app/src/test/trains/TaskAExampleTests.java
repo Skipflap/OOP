@@ -44,7 +44,7 @@ public class TaskAExampleTests {
         controller.createStation("s1", "DepotStation", 1.0, 1.0);
         controller.createStation("s2", "CargoStation", 10.0, 10.0);
         controller.createTrack("t1-2", "s1", "s2");
-        assertEquals(controller.getTrackInfo("t1-2"), new TrackInfoResponse("t1-2", "s1", "s2", TrackType.NORMAL, 10));
+        assertEquals(new TrackInfoResponse("t1-2", "s1", "s2", TrackType.NORMAL, 10), controller.getTrackInfo("t1-2"));
     }
 
     @Test
@@ -102,16 +102,16 @@ public class TaskAExampleTests {
             controller.createTrain("train1", "PassengerTrain", "s2", List.of("s1", "s2"));
         });
 
-        assertEquals(controller.listStationIds(), List.of("s1", "s2"));
-        assertEquals(controller.listTrackIds(), List.of("t1-2"));
-        assertEquals(controller.listTrainIds(), List.of("train1"));
+        assertEquals(List.of("s1", "s2"), controller.listStationIds());
+        assertEquals(List.of("t1-2"), controller.listTrackIds());
+        assertEquals(List.of("train1"), controller.listTrainIds());
 
         // controller2 should not have these entities
         assertNotEquals(controller.listStationIds(), controller2.listStationIds());
         assertNotEquals(controller.listTrackIds(), controller2.listTrackIds());
         assertNotEquals(controller.listTrainIds(), controller2.listTrainIds());
-        assertEquals(controller2.listStationIds(), List.of());
-        assertEquals(controller2.listTrackIds(), List.of());
-        assertEquals(controller2.listTrainIds(), List.of());
+        assertEquals(List.of(), controller2.listStationIds());
+        assertEquals(List.of(), controller2.listTrackIds());
+        assertEquals(List.of(), controller2.listTrainIds());
     }
 }
