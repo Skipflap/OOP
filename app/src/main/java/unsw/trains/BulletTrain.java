@@ -5,25 +5,29 @@ import unsw.utils.Position;
 import unsw.routes.RouteType;
 import unsw.stations.Station;
 import unsw.tracks.Track;
+import unsw.loads.Load;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class BulletTrain extends Train {
     private static final double BASE_SPEED = 5.0;
-    private static final double MAX_COMBINED_WEIGHT = 5000;
+    private static final double MAX_COMBINED_WEIGHT = 5000.0;
 
-    // BulletTrain can carry both passengers and cargo, so we store them in a list of Loads.
-    private List<unsw.loads.Load> loads;
+    // The bullet train’s current loads
+    private List<Load> loads;
 
     public BulletTrain(String trainId, Position position, String currentLocationId, unsw.routes.Route route) {
         super(trainId, position, currentLocationId, route);
-        loads = new java.util.ArrayList<>();
+        this.loads = new ArrayList<>();
     }
 
     @Override
     public double getSpeed() {
         double totalWeight = LoadUtils.getTotalWeight(loads);
+        // E.g. for bullet train, we might reduce speed by 0.01% per kg, or something similar.
+        // If you want to keep it simpler, you can just do BASE_SPEED (the spec hints at slowdown, though).
         return LoadUtils.calculateEffectiveSpeed(BASE_SPEED, totalWeight);
     }
 
@@ -31,49 +35,62 @@ public class BulletTrain extends Train {
         return MAX_COMBINED_WEIGHT;
     }
 
-    // Adds a load (passenger or cargo) to the train.
-    public void addLoad(unsw.loads.Load load) {
-        if (getTotalLoadWeight() + load.getWeight() > MAX_COMBINED_WEIGHT) {
-            throw new IllegalStateException("Adding this load would exceed maximum combined weight.");
-        }
-        loads.add(load);
+    @Override
+    public List<Load> getLoads() {
+        // So stations can call train.getLoads().remove(...)
+        return this.loads;
     }
 
-    // Sum the weight of all loads on the train.
+    public void addLoad(Load load) {
+        double newTotal = getTotalLoadWeight() + load.getWeight();
+        if (newTotal > MAX_COMBINED_WEIGHT) {
+            throw new IllegalStateException(
+                    "Cannot add load. Exceeds BulletTrain’s max combined load of " + MAX_COMBINED_WEIGHT);
+        }
+        this.loads.add(load);
+    }
+
     public double getTotalLoadWeight() {
-        double total = 0;
-        for (unsw.loads.Load l : loads) {
-            total += l.getWeight();
-        }
-        return total;
+        return loads.stream().mapToDouble(Load::getWeight).sum();
     }
 
+    /**
+     * The main movement method, updated to do pre-departure + arrival load/unload.
+     */
     @Override
     public void moveOneTick(Map<String, Station> stations, Map<String, Track> tracks) {
-        assert getRoute().getStations().contains(getCurrentLocationId())
-                : "Current location " + getCurrentLocationId() + " must be in the route.";
+        // (1) If physically on a station at start of tick, do pre-departure load/unload
+        Station currentStation = stations.get(getCurrentLocationId());
+        if (currentStation != null) {
+            currentStation.unloadTrain(this);
+            currentStation.loadTrain(this);
+        }
 
+        // (2) Decide partial movement vs arrival
         boolean forward = isMovingForward();
         String nextStationId = getRoute().getNextStation(getCurrentLocationId(), forward);
         Station nextStation = stations.get(nextStationId);
-        assert nextStation != null : "Next station " + nextStationId + " must exist.";
 
-        Position nextStationPos = nextStation.getPosition();
+        double distance = getPosition().distance(nextStation.getPosition());
         double effectiveSpeed = getSpeed();
-        double distance = getPosition().distance(nextStationPos);
 
         if (effectiveSpeed >= distance) {
-            setPosition(nextStationPos);
+            // We arrive this tick
+            setPosition(nextStation.getPosition());
             setCurrentLocationId(nextStationId);
 
+            // (3) ARRIVAL => load/unload again
+            nextStation.unloadTrain(this);
+            nextStation.loadTrain(this);
+
+            // If linear route, we might reverse
             if (getRoute().getType() == RouteType.LINEAR) {
                 updateDirectionIfNeeded(forward);
             }
-            // For cyclical routes, the direction remains unchanged.
+            // cyc route => direction remains
         } else {
-            // Otherwise, move proportionally towards the next station.
-            // The Position class's calculateNewPosition helper computes the new coordinates.
-            Position newPos = getPosition().calculateNewPosition(nextStationPos, effectiveSpeed);
+            // partial
+            Position newPos = getPosition().calculateNewPosition(nextStation.getPosition(), effectiveSpeed);
             setPosition(newPos);
         }
     }

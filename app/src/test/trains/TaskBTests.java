@@ -338,8 +338,7 @@ public class TaskBTests {
 
     /**
      * TEST 5: If a station becomes full *just* before an inbound train arrives,
-     * the inbound train should not move that tick. 
-     * (Task B spec 2.5.5: 'If a station becomes full before an inbound train arrives, the inbound train will not move that tick.')
+     * the inbound train should not move that tick.
      */
     @Test
     public void testInboundTrainBlockedByFullStation() throws InvalidRouteException {
@@ -360,7 +359,7 @@ public class TaskBTests {
         // Distance=10, speed=2 => 5 ticks from psA -> psB.
         controller.simulate(4);
         // after 4 ticks, position ~ x=8 (2km/min *4).
-        // next tick => the train is inbound. 
+        // next tick => the train is inbound.
         // BUT psB is still full (2 trains).
         // So the inbound train should NOT move on the 5th tick.
 
@@ -373,5 +372,3 @@ public class TaskBTests {
         assertNotEquals("psB", inboundInfo.getLocation());
     }
 }
-
-

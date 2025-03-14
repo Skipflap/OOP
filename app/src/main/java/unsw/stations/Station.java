@@ -76,11 +76,15 @@ public abstract class Station {
                 toRemove.add(l);
             }
         }
+
+        if (!toRemove.isEmpty()) {
+            System.out.println("DEBUG: Unloading cargo at " + stationId + " => " + toRemove.size() + " items.");
+        }
+
         // Actually remove them
         train.getLoads().removeAll(toRemove);
+        System.out.println("DEBUG: trainCargo now has " + train.getLoads().size() + " cargo items after unloading.");
 
-        // The spec indicates that loads removed at their destination are “deleted from the system,”
-        // so we do NOT add them to the station’s load list.
     }
 
     public void loadTrain(Train train) {
@@ -93,15 +97,20 @@ public abstract class Station {
         for (Load ld : sortedLoads) {
             if (!trainWillVisitDestination(train, ld.getDestination())) {
                 // if the train won't pass the load's destination, skip
+                System.out.println(
+                        "DEBUG: Skipping cargo " + ld.getLoad() + " - Train does not reach " + ld.getDestination());
                 continue;
             }
             if (!trainCanAcceptLoad(train, ld)) {
                 // skip if capacity won't permit
+                System.out.println(
+                        "DEBUG: Skipping cargo " + ld.getLoad() + " - Train cannot accept due to weight limit.");
                 continue;
             }
             // Passed all checks => transfer from station to train
             this.loads.remove(ld);
             train.addLoad(ld);
+            System.out.println("DEBUG: Cargo " + ld.getLoad() + " loaded onto train " + train.getTrainId());
         }
     }
 
@@ -128,7 +137,10 @@ public abstract class Station {
                 return false;
             double current = getCurrentCargoWeight(train);
             double toAdd = ((unsw.loads.Cargo) load).getWeight();
-            return (current + toAdd <= 5000);
+            boolean canLoad = (current + toAdd <= 5000);
+            System.out.println("DEBUG: Checking cargo " + load.getLoad() + " (weight " + toAdd + ")");
+            System.out.println("DEBUG: Train current weight: " + current + " | Max: 5000 | Can load? " + canLoad);
+            return canLoad;
         } else if (train instanceof BulletTrain) {
             // bullet can carry passenger or cargo, up to 5000 total.
             double current = getMixedLoadWeight(train);
